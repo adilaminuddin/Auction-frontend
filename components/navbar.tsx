@@ -3,271 +3,287 @@
 import React from "react";
 import {
   Navbar,
-  Collapse,
+  MobileNav,
   Typography,
   Button,
-  IconButton,
-  List,
-  ListItem,
   Menu,
   MenuHandler,
   MenuList,
   MenuItem,
-  Chip,
+  Avatar,
+  Card,
+  IconButton,
 } from "@material-tailwind/react";
 import {
-  ChevronDownIcon,
-  UserCircleIcon,
   CubeTransparentIcon,
-  Bars3Icon,
-  XMarkIcon,
-  FlagIcon,
-  ChatBubbleOvalLeftIcon,
-  UsersIcon,
-  FolderIcon,
+  UserCircleIcon,
+  CodeBracketSquareIcon,
   Square3Stack3DIcon,
+  ChevronDownIcon,
+  Cog6ToothIcon,
+  InboxArrowDownIcon,
+  LifebuoyIcon,
+  PowerIcon,
   RocketLaunchIcon,
-  FaceSmileIcon,
-  PuzzlePieceIcon,
-  GiftIcon,
+  Bars2Icon,
+  ChatBubbleOvalLeftEllipsisIcon,
 } from "@heroicons/react/24/outline";
  
-const colors = {
-  blue: "bg-blue-50 text-blue-500",
-  orange: "bg-orange-50 text-orange-500",
-  green: "bg-green-50 text-green-500",
-  "blue-gray": "bg-blue-gray-50 text-blue-gray-500",
-  purple: "bg-purple-50 text-purple-500",
-  teal: "bg-teal-50 text-teal-500",
-  cyan: "bg-cyan-50 text-cyan-500",
-  pink: "bg-pink-50 text-pink-500",
-};
+// profile menu component
+const profileMenuItems = [
+  {
+    label: "My Profile",
+    icon: UserCircleIcon,
+  },
+  {
+    label: "Edit Profile",
+    icon: Cog6ToothIcon,
+  },
+  {
+    label: "Inbox",
+    icon: InboxArrowDownIcon,
+  },
+  {
+    label: "Help",
+    icon: LifebuoyIcon,
+  },
+  {
+    label: "Sign Out",
+    icon: PowerIcon,
+  },
+];
  
+function ProfileMenu() {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const closeMenu = () => setIsMenuOpen(false);
+ 
+  return (
+    <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
+      <MenuHandler>
+        <Button
+          variant="text"
+          color="blue-gray"
+          className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
+        >
+          <Avatar
+            variant="circular"
+            size="sm"
+            alt="tania andrew"
+            className="border border-blue-500 p-0.5"
+            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+          />
+          <ChevronDownIcon
+            strokeWidth={2.5}
+            className={`h-3 w-3 transition-transform ${
+              isMenuOpen ? "rotate-180" : ""
+            }`}
+          />
+        </Button>
+      </MenuHandler>
+      <MenuList className="p-1">
+        {profileMenuItems.map(({ label, icon }, key) => {
+          const isLastItem = key === profileMenuItems.length - 1;
+          return (
+            <MenuItem
+              key={label}
+              onClick={closeMenu}
+              className={`flex items-center gap-2 rounded ${
+                isLastItem
+                  ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
+                  : ""
+              }`}
+            >
+              {React.createElement(icon, {
+                className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
+                strokeWidth: 2,
+              })}
+              <Typography
+                as="span"
+                variant="small"
+                className="font-normal"
+                color={isLastItem ? "red" : "inherit"}
+              >
+                {label}
+              </Typography>
+            </MenuItem>
+          );
+        })}
+      </MenuList>
+    </Menu>
+  );
+}
+ 
+// nav list menu
 const navListMenuItems = [
   {
-    color: "blue",
-    icon: FlagIcon,
-    title: "About us",
-    description: "Learn about our story and our mission statement.",
+    title: "@material-tailwind/html",
+    description:
+      "Learn how to use @material-tailwind/html, packed with rich components and widgets.",
   },
   {
-    color: "orange",
-    icon: ChatBubbleOvalLeftIcon,
-    title: "Press",
-    description: "News and writings, press releases, and resources",
+    title: "@material-tailwind/react",
+    description:
+      "Learn how to use @material-tailwind/react, packed with rich components for React.",
   },
   {
-    color: "green",
-    icon: UsersIcon,
-    title: (
-      <div className="flex items-center gap-1">
-        Careers{" "}
-        <Chip
-          size="sm"
-          color="green"
-          variant="ghost"
-          value="We're hiring!"
-          className="capitalize"
-        />
-      </div>
-    ),
-    description: "We are always looking for talented people. Join us!",
-  },
-  {
-    color: "blue-gray",
-    icon: FolderIcon,
-    title: "Legal",
-    description: "All the stuff that we dan from legal made us add.",
-  },
-  {
-    color: "purple",
-    icon: RocketLaunchIcon,
-    title: "Products",
-    description: "Checkout our products that helps a startup running.",
-  },
-  {
-    color: "teal",
-    icon: FaceSmileIcon,
-    title: "Icons",
-    description: "Set of beautiful icons that you can use in your project.",
-  },
-  {
-    color: "cyan",
-    icon: PuzzlePieceIcon,
-    title: "UI Kits",
-    description: "High quality UI Kits helps you to 2x faster.",
-  },
-  {
-    color: "pink",
-    icon: GiftIcon,
-    title: "Open Source",
-    description: "List of all our open-source projects, it's all free.",
+    title: "Material Tailwind PRO",
+    description:
+      "A complete set of UI Elements for building faster websites in less time.",
   },
 ];
  
 function NavListMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
  
-  const renderItems = navListMenuItems.map(
-    ({ icon, title, description, color }, key) => (
-      <a href="#" key={key}>
-        <MenuItem className="flex items-center gap-3 rounded-lg">
-          <div className={`rounded-lg p-5 ${colors[color]}`}>
-            {React.createElement(icon, {
-              strokeWidth: 2,
-              className: "h-6 w-6",
-            })}
-          </div>
-          <div>
-            <Typography
-              variant="h6"
-              color="blue-gray"
-              className="flex items-center text-sm"
-            >
-              {title}
-            </Typography>
-            <Typography variant="small" color="gray" className="font-normal">
-              {description}
-            </Typography>
-          </div>
-        </MenuItem>
-      </a>
-    )
-  );
+  const triggers = {
+    onMouseEnter: () => setIsMenuOpen(true),
+    onMouseLeave: () => setIsMenuOpen(false),
+  };
+ 
+  const renderItems = navListMenuItems.map(({ title, description }) => (
+    <a href="#" key={title}>
+      <MenuItem>
+        <Typography variant="h6" color="blue-gray" className="mb-1">
+          {title}
+        </Typography>
+        <Typography variant="small" color="gray" className="font-normal">
+          {description}
+        </Typography>
+      </MenuItem>
+    </a>
+  ));
  
   return (
     <React.Fragment>
-      <Menu
-        open={isMenuOpen}
-        handler={setIsMenuOpen}
-        offset={{ mainAxis: 20 }}
-        placement="bottom"
-        allowHover={true}
-      >
+      <Menu open={isMenuOpen} handler={setIsMenuOpen}>
         <MenuHandler>
-          <Typography as="div" variant="small" className="font-normal">
-            <ListItem
-              className="flex items-center gap-2 py-2 pr-4"
-              selected={isMenuOpen || isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen((cur) => !cur)}
+          <Typography as="a" href="#" variant="small" className="font-normal">
+            <MenuItem
+              {...triggers}
+              className="hidden items-center gap-2 text-blue-gray-900 lg:flex lg:rounded-full"
             >
-              <Square3Stack3DIcon className="h-[18px] w-[18px]" />
-              Resources
+              <Square3Stack3DIcon className="h-[18px] w-[18px]" /> Pages{" "}
               <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`hidden h-3 w-3 transition-transform lg:block ${
+                strokeWidth={2}
+                className={`h-3 w-3 transition-transform ${
                   isMenuOpen ? "rotate-180" : ""
                 }`}
               />
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`block h-3 w-3 transition-transform lg:hidden ${
-                  isMobileMenuOpen ? "rotate-180" : ""
-                }`}
-              />
-            </ListItem>
+            </MenuItem>
           </Typography>
         </MenuHandler>
-        <MenuList className="hidden max-w-screen-xl rounded-xl lg:block">
-          <ul className="grid grid-cols-4 gap-y-2">{renderItems}</ul>
+        <MenuList
+          {...triggers}
+          className="hidden w-[36rem] grid-cols-7 gap-3 overflow-visible lg:grid"
+        >
+          <Card
+            color="blue"
+            shadow={false}
+            variant="gradient"
+            className="col-span-3 grid h-full w-full place-items-center rounded-md"
+          >
+            <RocketLaunchIcon strokeWidth={1} className="h-28 w-28" />
+          </Card>
+          <ul className="col-span-4 flex w-full flex-col gap-1">
+            {renderItems}
+          </ul>
         </MenuList>
       </Menu>
-      <div className="block lg:hidden">
-        <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
-      </div>
+      <MenuItem className="flex items-center gap-2 text-blue-gray-900 lg:hidden">
+        <Square3Stack3DIcon className="h-[18px] w-[18px]" /> Pages{" "}
+      </MenuItem>
+      <ul className="ml-6 flex w-full flex-col gap-1 lg:hidden">
+        {renderItems}
+      </ul>
     </React.Fragment>
   );
 }
  
+// nav list component
+const navListItems = [
+  {
+    label: "Account",
+    icon: UserCircleIcon,
+    url: "/auction"
+  },
+  {
+    label: "Blocks",
+    icon: CubeTransparentIcon,
+    url: "/block"
+  },
+  {
+    label: "Docs",
+    icon: CodeBracketSquareIcon,
+    url: "/doc"
+  },
+  {
+    label: "About",
+    icon: ChatBubbleOvalLeftEllipsisIcon,
+    url: "/about"
+  },
+];
+ 
 function NavList() {
   return (
-    <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
-      <Typography
-        as="a"
-        href="#"
-        variant="small"
-        color="blue-gray"
-        className="font-normal"
-      >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">
-          <CubeTransparentIcon className="h-[18px] w-[18px]" />
-          Blocks
-        </ListItem>
-      </Typography>
+    <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
       <NavListMenu />
-      <Typography
-        as="a"
-        href="#"
-        variant="small"
-        color="blue-gray"
-        className="font-normal"
-      >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">
-          <UserCircleIcon className="h-[18px] w-[18px]" />
-          Account
-        </ListItem>
-      </Typography>
-    </List>
+      {navListItems.map(({ url, label, icon }, key) => (
+        <Typography
+          key={label}
+          as="a"
+          href={url}
+          variant="small"
+          color="blue-gray"
+          className="font-normal"
+        >
+          <MenuItem className="flex items-center gap-2 lg:rounded-full">
+            {React.createElement(icon, { className: "h-[18px] w-[18px]" })}{" "}
+            {label}
+          </MenuItem>
+        </Typography>
+      ))}
+    </ul>
   );
 }
  
-export default function Example() {
-  const [openNav, setOpenNav] = React.useState(false);
+export default function PNavbar() {
+  const [isNavOpen, setIsNavOpen] = React.useState(false);
+  const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
  
   React.useEffect(() => {
     window.addEventListener(
       "resize",
-      () => window.innerWidth >= 960 && setOpenNav(false)
+      () => window.innerWidth >= 960 && setIsNavOpen(false)
     );
   }, []);
  
   return (
-    <Navbar className="mx-auto max-w-screen-xl px-4 py-2">
-      <div className="flex items-center justify-between text-blue-gray-900">
+    <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6">
+      <div className="relative mx-auto flex items-center text-blue-gray-900">
         <Typography
           as="a"
-          href="#"
-          variant="h6"
-          className="mr-4 cursor-pointer py-1.5 lg:ml-2"
+          href="/"
+          className="mr-4 ml-2 cursor-pointer py-1.5 font-medium"
         >
-          Material Tailwind
+          Maternal
         </Typography>
-        <div className="hidden lg:block">
+        <div className="absolute top-2/4 left-2/4 hidden -translate-x-2/4 -translate-y-2/4 lg:block">
           <NavList />
         </div>
-        <div className="hidden gap-2 lg:flex">
-          <Button variant="text" size="sm" color="blue-gray">
-            Sign In
-          </Button>
-          <Button variant="gradient" size="sm">
-            Sign Up
-          </Button>
-        </div>
         <IconButton
-          variant="text"
+          size="sm"
           color="blue-gray"
-          className="lg:hidden"
-          onClick={() => setOpenNav(!openNav)}
+          variant="text"
+          onClick={toggleIsNavOpen}
+          className="ml-auto mr-2 lg:hidden"
         >
-          {openNav ? (
-            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
-          ) : (
-            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
-          )}
+          <Bars2Icon className="h-6 w-6" />
         </IconButton>
+        <ProfileMenu />
       </div>
-      <Collapse open={openNav}>
+      <MobileNav open={isNavOpen} className="overflow-scroll">
         <NavList />
-        <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
-          <Button variant="outlined" size="sm" color="blue-gray" fullWidth>
-            Sign In
-          </Button>
-          <Button variant="gradient" size="sm" fullWidth>
-            Sign Up
-          </Button>
-        </div>
-      </Collapse>
+      </MobileNav>
     </Navbar>
   );
 }
